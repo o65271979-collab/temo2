@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temo - نظام إدارة المطعم</title>
+    <link rel="stylesheet" href="styles-pro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Temo</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link active"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="login.html" class="nav-link"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+                <a href="shifts.html" class="nav-link" id="shiftsLink" style="display: none;"><i class="fas fa-clock"></i> الشيفتات</a>
+                <a href="expenses.html" class="nav-link" id="expensesLink" style="display: none;"><i class="fas fa-receipt"></i> المصاريف</a>
+                <a href="reports.html" class="nav-link" id="reportsLink" style="display: none;"><i class="fas fa-chart-bar"></i> التقارير</a>
+                <a href="statistics.html" class="nav-link" id="statisticsLink" style="display: none;"><i class="fas fa-analytics"></i> الإحصائيات</a>
+                <a href="settings.html" class="nav-link" id="settingsLink" style="display: none;"><i class="fas fa-cog"></i> الإعدادات</a>
+                <button id="logoutBtn" class="logout-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i> خروج</button>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="page-container">
+                <!-- Welcome Section for Guests -->
+                <div id="guestSection" class="welcome-section">
+                    <div class="welcome-hero">
+                        <div class="hero-content">
+                            <h1><i class="fas fa-utensils"></i> مرحباً بك في Temo</h1>
+                            <p class="hero-subtitle">نظام إدارة المطعم الذكي والمتطور</p>
+                            <p class="hero-description">
+                                إدارة شاملة لجميع عمليات مطعمك من الشيفتات والمبيعات إلى المصاريف والتقارير التفصيلية
+                            </p>
+                            <div class="hero-actions">
+                                <a href="login.html" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                                </a>
+                            </div>
+                        </div>
+                        <div class="hero-features">
+                            <div class="feature-item">
+                                <i class="fas fa-clock"></i>
+                                <h3>إدارة الشيفتات</h3>
+                                <p>تتبع أوقات العمل والمبيعات</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-chart-bar"></i>
+                                <h3>التقارير التفصيلية</h3>
+                                <p>تحليلات شاملة للأداء</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-receipt"></i>
+                                <h3>إدارة المصاريف</h3>
+                                <p>تتبع دقيق لجميع المصروفات</p>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-analytics"></i>
+                                <h3>الإحصائيات المتقدمة</h3>
+                                <p>رؤى ذكية لاتخاذ القرارات</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard for Logged In Users -->
+                <div id="dashboardSection" style="display: none;">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <h2>لوحة التحكم</h2>
+                        </div>
+                        <div class="page-actions">
+                            <button class="btn btn-primary" onclick="refreshAllData()">
+                                <i class="fas fa-sync-alt"></i> تحديث البيانات
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- User Info Card -->
+                    <div id="userInfo" class="user-info-card">
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="user-details">
+                            <h3>مرحباً، <span id="userDisplayName"></span></h3>
+                            <p><i class="fas fa-envelope"></i> <span id="userEmail"></span></p>
+                            <p><i class="fas fa-calendar"></i> آخر دخول: <span id="lastLogin"></span></p>
+                        </div>
+                        <div class="header-actions">
+                            <!-- Notifications will be added here by notifications.js -->
+                            <button id="logoutBtn" class="btn btn-outline">
+                                <i class="fas fa-sign-out-alt"></i>
+                                تسجيل الخروج
+                            </button>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="stats-cards">
+                            <div class="stat-card" onclick="window.location.href='shifts.html'">
+                                <div class="stat-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="shiftsCount">0</h3>
+                                    <p>الشيفتات</p>
+                                </div>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="shiftsCount">0</h3>
+                                <p>الشيفتات</p>
+                            </div>
+                        </div>
+                        <div class="stat-card" onclick="window.location.href='reports.html'">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card" onclick="window.location.href='expenses.html'">
+                            <div class="stat-icon">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="expensesCount">0</h3>
+                                <p>المصاريف</p>
+                            </div>
+                        </div>
+                        <div class="stat-card" onclick="window.location.href='statistics.html'">
+                            <div class="stat-icon">
+                                <i class="fas fa-analytics"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalRevenue">0 ج.م</h3>
+                                <p>إجمالي الإيرادات</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <h3><i class="fas fa-bolt"></i> الإجراءات السريعة</h3>
+                        <div class="actions-grid">
+                            <a href="shifts.html" class="action-card">
+                                <i class="fas fa-clock"></i>
+                                <h4>عرض الشيفتات</h4>
+                                <p>إدارة ومراقبة جميع الشيفتات</p>
+                            </a>
+                            <a href="expenses.html" class="action-card">
+                                <i class="fas fa-receipt"></i>
+                                <h4>المصاريف</h4>
+                                <p>تتبع وإدارة المصروفات</p>
+                            </a>
+                            <a href="statistics.html" class="action-card">
+                                <i class="fas fa-analytics"></i>
+                                <h4>الإحصائيات</h4>
+                                <p>تحليلات متقدمة ورؤى ذكية</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 Temo. جميع الحقوق محفوظة.</p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script src="app-compat.js"></script>
+    <script src="notifications.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الشيفتات - Temo</title>
+    <link rel="stylesheet" href="styles-pro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Temo</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="shifts.html" class="nav-link active"><i class="fas fa-clock"></i> الشيفتات</a>
+                <a href="expenses.html" class="nav-link"><i class="fas fa-receipt"></i> المصاريف</a>
+                <a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> التقارير</a>
+                <a href="statistics.html" class="nav-link"><i class="fas fa-analytics"></i> الإحصائيات</a>
+                <a href="settings.html" class="nav-link" id="settingsLink" style="display: none;"><i class="fas fa-cog"></i> الإعدادات</a>
+                <button id="logoutBtn" class="logout-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i> خروج</button>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="page-container">
+                <div class="page-header">
+                    <div class="page-title">
+                        <i class="fas fa-clock"></i>
+                        <h2>إدارة الشيفتات</h2>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i> تحديث
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportData()">
+                            <i class="fas fa-download"></i> تصدير
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalShifts">0</h3>
+                            <p>إجمالي الشيفتات</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="todayShifts">0</h3>
+                            <p>شيفتات اليوم</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="activeShifts">0</h3>
+                            <p>الشيفتات النشطة</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalRevenue">0 ج.م</h3>
+                            <p>إجمالي الإيرادات</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-list"></i> قائمة الشيفتات</h3>
+                        <div class="filters">
+                            <select id="statusFilter" class="filter-select">
+                                <option value="">جميع الحالات</option>
+                                <option value="active">نشط</option>
+                                <option value="completed">مكتمل</option>
+                                <option value="cancelled">ملغي</option>
+                            </select>
+                            <input type="date" id="dateFilter" class="filter-input">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="hideEmptyReports" checked>
+                                <span class="slider"></span>
+                                <span class="toggle-label">إخفاء التقارير الفارغة</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="shiftsContainer" class="data-container">
+                        <!-- Shifts will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Temo. جميع الحقوق محفوظة.</p>
+        </footer>
+    </div>
+
+    <!-- Shift Details Modal -->
+    <div id="shiftModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">تفاصيل الشيفت</h3>
+                <span class="close" onclick="closeShiftModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Shift details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeShiftModal()">إغلاق</button>
+                <button class="btn btn-primary" onclick="exportShiftDetails()">تصدير التفاصيل</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script src="shifts-page.js"></script>
+    <script src="notifications.js"></script>
+</body>
+</html>

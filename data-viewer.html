@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عارض البيانات - Temo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .data-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .collection-card {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .collection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .collection-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .collection-count {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .data-item {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-right: 4px solid #667eea;
+        }
+        .data-item h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .data-details {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+        }
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .refresh-btn:hover {
+            background: #5a6fd8;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>Temo</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="login.html" class="nav-link">تسجيل الدخول</a>
+                <a href="data-viewer.html" class="nav-link active">عارض البيانات</a>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="data-container">
+                <h2>عارض بيانات Firebase</h2>
+                <p>هذه الصفحة تعرض جميع البيانات الموجودة في قاعدة بيانات Firebase</p>
+                
+                <div id="dataContainer">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>جاري تحميل البيانات...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <button class="refresh-btn" onclick="loadAllData()">
+            🔄 تحديث البيانات
+        </button>
+
+        <footer class="footer">
+            <p>&copy; 2024 Temo. جميع الحقوق محفوظة.</p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAtCV2XfOJwLy050kHg5y_Oqy-9NfKyOlc",
+            authDomain: "temo-a8e65.firebaseapp.com",
+            projectId: "temo-a8e65",
+            storageBucket: "temo-a8e65.firebasestorage.app",
+            messagingSenderId: "897974034557",
+            appId: "1:897974034557:web:fcb74ee2c9e9b73def1114",
+            measurementId: "G-EVZ5JG42TS"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const dataContainer = document.getElementById('dataContainer');
+
+        // Collections to check
+        const collections = [
+            { name: 'shifts', displayName: 'الشيفتات' },
+            { name: 'sales_reports', displayName: 'تقارير المبيعات' },
+            { name: 'comprehensive_reports', displayName: 'التقارير الشاملة' },
+            { name: 'reports', displayName: 'التقارير العامة' },
+            { name: 'expenses', displayName: 'المصاريف' },
+            { name: 'users', displayName: 'المستخدمين' }
+        ];
+
+        async function loadAllData() {
+            dataContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>جاري تحميل البيانات...</p></div>';
+            
+            let html = '';
+            let totalItems = 0;
+
+            for (const collection of collections) {
+                try {
+                    const snapshot = await db.collection(collection.name).orderBy(firebase.firestore.FieldPath.documentId()).get();
+                    
+                    html += `
+                        <div class="collection-card">
+                            <div class="collection-header">
+                                <div class="collection-name">${collection.displayName}</div>
+                                <div class="collection-count">${snapshot.size} عنصر</div>
+                            </div>
+                    `;
+
+                    if (snapshot.size === 0) {
+                        html += '<div class="empty-state">لا توجد بيانات في هذه المجموعة</div>';
+                    } else {
+                        totalItems += snapshot.size;
+                        
+                        snapshot.forEach((doc, index) => {
+                            if (index < 5) { // Show only first 5 items
+                                const data = doc.data();
+                                html += `
+                                    <div class="data-item">
+                                        <h4>📄 ${doc.id}</h4>
+                                        <div class="data-details">
+                                            ${formatDataForDisplay(data)}
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        });
+
+                        if (snapshot.size > 5) {
+                            html += `<div class="data-details" style="text-align: center; margin-top: 15px; font-style: italic;">... و ${snapshot.size - 5} عنصر آخر</div>`;
+                        }
+                    }
+
+                    html += '</div>';
+                } catch (error) {
+                    html += `
+                        <div class="collection-card">
+                            <div class="collection-header">
+                                <div class="collection-name">${collection.displayName}</div>
+                                <div class="collection-count" style="background: #e74c3c;">خطأ</div>
+                            </div>
+                            <div class="empty-state">خطأ في تحميل البيانات: ${error.message}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Add summary
+            html = `
+                <div class="collection-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                    <div class="collection-header" style="border-bottom-color: rgba(255,255,255,0.3);">
+                        <div class="collection-name">📊 ملخص البيانات</div>
+                        <div class="collection-count" style="background: rgba(255,255,255,0.2);">${totalItems} إجمالي</div>
+                    </div>
+                    <div style="padding: 10px 0;">
+                        <p>إجمالي العناصر في جميع المجموعات: <strong>${totalItems}</strong></p>
+                        <p>تم التحديث: ${new Date().toLocaleString('ar-EG')}</p>
+                    </div>
+                </div>
+            ` + html;
+
+            dataContainer.innerHTML = html;
+        }
+
+        function formatDataForDisplay(data) {
+            let formatted = '';
+            const maxFields = 5;
+            let fieldCount = 0;
+
+            for (const [key, value] of Object.entries(data)) {
+                if (fieldCount >= maxFields) {
+                    formatted += '<br><em>... والمزيد</em>';
+                    break;
+                }
+
+                let displayValue = value;
+                
+                // Format different data types
+                if (value && typeof value === 'object') {
+                    if (value.toDate && typeof value.toDate === 'function') {
+                        // Firestore Timestamp
+                        displayValue = value.toDate().toLocaleString('ar-EG');
+                    } else if (value.seconds) {
+                        // Firestore Timestamp object
+                        displayValue = new Date(value.seconds * 1000).toLocaleString('ar-EG');
+                    } else {
+                        displayValue = JSON.stringify(value).substring(0, 50) + '...';
+                    }
+                } else if (typeof value === 'string' && value.length > 50) {
+                    displayValue = value.substring(0, 50) + '...';
+                }
+
+                formatted += `<strong>${key}:</strong> ${displayValue}<br>`;
+                fieldCount++;
+            }
+
+            return formatted;
+        }
+
+        // Load data on page load
+        window.addEventListener('load', loadAllData);
+    </script>
+</body>
+</html>

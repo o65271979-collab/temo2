@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإحصائيات - Temo</title>
+    <link rel="stylesheet" href="styles-pro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Temo</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="shifts.html" class="nav-link"><i class="fas fa-clock"></i> الشيفتات</a>
+                <a href="expenses.html" class="nav-link"><i class="fas fa-receipt"></i> المصاريف</a>
+                <a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> التقارير</a>
+                <a href="statistics.html" class="nav-link active"><i class="fas fa-analytics"></i> الإحصائيات</a>
+                <a href="settings.html" class="nav-link" id="settingsLink" style="display: none;"><i class="fas fa-cog"></i> الإعدادات</a>
+                <button id="logoutBtn" class="logout-btn" style="display: none;"><i class="fas fa-sign-out-alt"></i> خروج</button>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="page-container">
+                <div class="page-header">
+                    <div class="page-title">
+                        <i class="fas fa-analytics"></i>
+                        <h2>الإحصائيات والتحليلات</h2>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="refreshStatistics()">
+                            <i class="fas fa-sync-alt"></i> تحديث البيانات
+                        </button>
+                        <button class="btn btn-secondary" onclick="recalculateStats()">
+                            <i class="fas fa-calculator"></i> إعادة حساب
+                        </button>
+                        <select id="periodFilter" class="filter-select">
+                            <option value="today">اليوم</option>
+                            <option value="week">هذا الأسبوع</option>
+                            <option value="month" selected>هذا الشهر</option>
+                            <option value="year">هذا العام</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="stats-overview">
+                    <div class="overview-card revenue">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>الإيرادات</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="main-stat" id="totalRevenue">0 ج.م</div>
+                            <div class="sub-stats">
+                                <span class="trend positive" id="revenueTrend">+0%</span>
+                                <span class="period">مقارنة بالفترة السابقة</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-card expenses">
+                        <div class="card-header">
+                            <i class="fas fa-chart-line-down"></i>
+                            <h3>المصاريف</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="main-stat" id="totalExpensesAmount">0 ج.م</div>
+                            <div class="sub-stats">
+                                <span class="trend negative" id="expensesTrend">+0%</span>
+                                <span class="period">مقارنة بالفترة السابقة</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-card profit">
+                        <div class="card-header">
+                            <i class="fas fa-coins"></i>
+                            <h3>صافي الربح</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="main-stat" id="netProfit">0 ج.م</div>
+                            <div class="sub-stats">
+                                <span class="trend positive" id="profitTrend">+0%</span>
+                                <span class="period">مقارنة بالفترة السابقة</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-card orders">
+                        <div class="card-header">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h3>الطلبات</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="main-stat" id="totalOrders">0</div>
+                            <div class="sub-stats">
+                                <span class="trend positive" id="ordersTrend">+0%</span>
+                                <span class="period">مقارنة بالفترة السابقة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-area"></i> الإيرادات والمصاريف</h3>
+                        </div>
+                        <canvas id="revenueExpensesChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-pie"></i> توزيع المصاريف</h3>
+                        </div>
+                        <canvas id="expensesDistributionChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-bar"></i> الشيفتات الأسبوعية</h3>
+                        </div>
+                        <canvas id="weeklyShiftsChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-line"></i> اتجاه المبيعات</h3>
+                        </div>
+                        <canvas id="salesTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="detailed-stats">
+                    <div class="stats-section">
+                        <h3><i class="fas fa-clock"></i> إحصائيات الشيفتات</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">متوسط مدة الشيفت</span>
+                                <span class="stat-value" id="avgShiftDuration">0 ساعة</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">أكثر الأيام نشاطاً</span>
+                                <span class="stat-value" id="busiestDay">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">متوسط الإيرادات لكل شيفت</span>
+                                <span class="stat-value" id="avgRevenuePerShift">0 ج.م</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3><i class="fas fa-receipt"></i> إحصائيات المصاريف</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">أعلى فئة مصاريف</span>
+                                <span class="stat-value" id="topExpenseCategory">-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">متوسط المصاريف اليومية</span>
+                                <span class="stat-value" id="avgDailyExpenses">0 ج.م</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">نسبة المصاريف من الإيرادات</span>
+                                <span class="stat-value" id="expenseRatio">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Temo. جميع الحقوق محفوظة.</p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="statistics-page.js"></script>
+    <script src="notifications.js"></script>
+</body>
+</html>

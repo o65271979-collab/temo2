@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temo - تسجيل الدخول</title>
+    <link rel="stylesheet" href="styles-pro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Temo</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="login.html" class="nav-link active"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</a>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2>تسجيل الدخول</h2>
+                    
+                    <div id="loginForm" class="form-section">
+                        <form id="loginFormElement">
+                            <div class="form-group">
+                                <label for="loginEmail">البريد الإلكتروني</label>
+                                <input type="email" id="loginEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loginPassword">كلمة المرور</label>
+                                <input type="password" id="loginPassword" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">تسجيل الدخول</button>
+                        </form>
+                        
+                        <div class="auth-switch">
+                            <p><a href="#" id="showReset">نسيت كلمة المرور؟</a></p>
+                        </div>
+                    </div>
+
+                    <div id="resetForm" class="form-section" style="display: none;">
+                        <h3>إعادة تعيين كلمة المرور</h3>
+                        <form id="resetFormElement">
+                            <div class="form-group">
+                                <label for="resetEmail">البريد الإلكتروني</label>
+                                <input type="email" id="resetEmail" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">إرسال رابط الإعادة</button>
+                        </form>
+                        
+                        <div class="auth-switch">
+                            <p><a href="#" id="backToLogin">العودة لتسجيل الدخول</a></p>
+                        </div>
+                    </div>
+
+                    <div id="message" class="message"></div>
+                    <div id="loading" class="loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>جاري المعالجة...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Temo. جميع الحقوق محفوظة.</p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script src="auth-compat.js"></script>
+</body>
+</html>

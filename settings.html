@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temo - الإعدادات</title>
+    <link rel="stylesheet" href="styles-pro.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <h1>Temo</h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a>
+                <a href="shifts.html" class="nav-link"><i class="fas fa-clock"></i> الشيفتات</a>
+                <a href="expenses.html" class="nav-link"><i class="fas fa-receipt"></i> المصاريف</a>
+                <a href="reports.html" class="nav-link"><i class="fas fa-chart-bar"></i> التقارير</a>
+                <a href="statistics.html" class="nav-link"><i class="fas fa-analytics"></i> الإحصائيات</a>
+                <a href="settings.html" class="nav-link active"><i class="fas fa-cog"></i> الإعدادات</a>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="page-container">
+                <div class="page-header">
+                    <div class="page-title">
+                        <i class="fas fa-cog"></i>
+                        <h2>إعدادات النظام</h2>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i> تحديث
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="profile"><i class="fas fa-user"></i> الملف الشخصي</button>
+                        <button class="tab-btn" data-tab="password"><i class="fas fa-key"></i> كلمة المرور</button>
+                        <button class="tab-btn" data-tab="users"><i class="fas fa-users"></i> إدارة المستخدمين</button>
+                        <button class="tab-btn" data-tab="data"><i class="fas fa-database"></i> إدارة البيانات</button>
+                    </div>
+                </div>
+
+                <!-- Profile Tab -->
+                <div id="profileTab" class="tab-content active">
+                    <div class="data-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-user"></i> معلومات الحساب</h3>
+                        </div>
+                        <div class="data-container">
+                            <div class="user-info-card">
+                                <div class="user-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div class="user-details">
+                                    <div class="detail-row">
+                                        <span><strong>البريد الإلكتروني:</strong> <span id="currentEmail">جاري التحميل...</span></span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span><strong>تاريخ إنشاء الحساب:</strong> <span id="accountCreated">جاري التحميل...</span></span>
+                                    </div>
+                                    <div class="detail-row">
+                                        <span><strong>آخر تسجيل دخول:</strong> <span id="lastSignIn">جاري التحميل...</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4><i class="fas fa-envelope"></i> تحديث البريد الإلكتروني</h4>
+                                <form id="updateEmailForm">
+                                    <div class="form-group">
+                                        <label for="newEmail">البريد الإلكتروني الجديد</label>
+                                        <input type="email" id="newEmail" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="currentPasswordForEmail">كلمة المرور الحالية</label>
+                                        <input type="password" id="currentPasswordForEmail" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> تحديث البريد الإلكتروني
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Tab -->
+                <div id="passwordTab" class="tab-content">
+                    <div class="data-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-key"></i> تغيير كلمة المرور</h3>
+                        </div>
+                        <div class="data-container">
+                            <div class="form-section">
+                                <form id="changePasswordForm">
+                                    <div class="form-group">
+                                        <label for="currentPassword">كلمة المرور الحالية</label>
+                                        <input type="password" id="currentPassword" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newPassword">كلمة المرور الجديدة</label>
+                                        <input type="password" id="newPassword" required minlength="6">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmNewPassword">تأكيد كلمة المرور الجديدة</label>
+                                        <input type="password" id="confirmNewPassword" required minlength="6">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-key"></i> تغيير كلمة المرور
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Management Tab -->
+                <div id="usersTab" class="tab-content">
+                    <div class="data-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-users"></i> إدارة المستخدمين</h3>
+                        </div>
+                        <div class="data-container">
+                            <div class="form-section">
+                                <h4><i class="fas fa-user-plus"></i> إضافة مستخدم جديد</h4>
+                                <form id="addUserForm">
+                                    <div class="form-group">
+                                        <label for="userEmail">البريد الإلكتروني</label>
+                                        <input type="email" id="userEmail" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="userPassword">كلمة المرور</label>
+                                        <input type="password" id="userPassword" required minlength="6">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="userRole">الدور</label>
+                                        <select id="userRole" required>
+                                            <option value="">اختر الدور</option>
+                                            <option value="admin">مدير</option>
+                                            <option value="manager">مدير فرع</option>
+                                            <option value="employee">موظف</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-user-plus"></i> إضافة المستخدم
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="form-section">
+                                <h4><i class="fas fa-list"></i> قائمة المستخدمين</h4>
+                                <div id="usersList" class="data-container">
+                                    <div class="loading-state">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <p>جاري تحميل المستخدمين...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Management Tab -->
+                <div id="dataTab" class="tab-content">
+                    <div class="data-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-database"></i> إدارة البيانات</h3>
+                        </div>
+                        <div class="data-container">
+                        
+                        <div class="data-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <span class="stat-label">الشيفتات</span>
+                                    <span class="stat-value" id="dataShiftsCount">0</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-chart-bar"></i>
+                                <div>
+                                    <span class="stat-label">التقارير</span>
+                                    <span class="stat-value" id="dataReportsCount">0</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-receipt"></i>
+                                <div>
+                                    <span class="stat-label">المصاريف</span>
+                                    <span class="stat-value" id="dataExpensesCount">0</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <div>
+                                    <span class="stat-label">المستخدمين</span>
+                                    <span class="stat-value" id="dataUsersCount">0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="danger-zone">
+                            <h4><i class="fas fa-exclamation-triangle"></i> منطقة الخطر</h4>
+                            <p class="warning-text">
+                                <i class="fas fa-warning"></i>
+                                تحذير: العمليات التالية لا يمكن التراجع عنها. يرجى التأكد قبل المتابعة.
+                            </p>
+                            
+                            <div class="danger-actions">
+                                <div class="danger-action">
+                                    <div class="action-info">
+                                        <h5>مسح جميع الشيفتات</h5>
+                                        <p>سيتم حذف جميع بيانات الشيفتات نهائياً</p>
+                                    </div>
+                                    <button class="btn btn-danger" onclick="clearData('shifts')">
+                                        <i class="fas fa-trash"></i> مسح الشيفتات
+                                    </button>
+                                </div>
+
+                                <div class="danger-action">
+                                    <div class="action-info">
+                                        <h5>مسح جميع التقارير</h5>
+                                        <p>سيتم حذف جميع تقارير المبيعات نهائياً</p>
+                                    </div>
+                                    <button class="btn btn-danger" onclick="clearData('reports')">
+                                        <i class="fas fa-trash"></i> مسح التقارير
+                                    </button>
+                                </div>
+
+                                <div class="danger-action">
+                                    <div class="action-info">
+                                        <h5>مسح جميع المصاريف</h5>
+                                        <p>سيتم حذف جميع بيانات المصاريف نهائياً</p>
+                                    </div>
+                                    <button class="btn btn-danger" onclick="clearData('expenses')">
+                                        <i class="fas fa-trash"></i> مسح المصاريف
+                                    </button>
+                                </div>
+
+                                <div class="danger-action critical">
+                                    <div class="action-info">
+                                        <h5>مسح جميع البيانات</h5>
+                                        <p>سيتم حذف جميع البيانات في النظام نهائياً (الشيفتات، التقارير، المصاريف)</p>
+                                    </div>
+                                    <button class="btn btn-danger critical" onclick="clearAllData()">
+                                        <i class="fas fa-exclamation-triangle"></i> مسح جميع البيانات
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="message" class="message"></div>
+                <div id="loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>جاري المعالجة...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Temo. جميع الحقوق محفوظة.</p>
+        </footer>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    
+    <script src="settings-compat.js"></script>
+    <script src="notifications.js"></script>
+</body>
+</html>
